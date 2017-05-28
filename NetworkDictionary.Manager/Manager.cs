@@ -13,7 +13,7 @@ namespace NetworkDictionary.Manager
     /// <summary>
     /// Cache dictionary manager
     /// </summary>
-    internal class Manager : IManager, IDisposable
+    internal class Manager : IManager
     {
         #region Data
 
@@ -52,20 +52,27 @@ namespace NetworkDictionary.Manager
         /// </summary>
         private readonly ManagerOptions _options;
 
+        /// <summary>
+        /// Cancellation token source for fabric
+        /// </summary>
+        private readonly CancellationTokenSource _cancellationTokenSource;
+
         #endregion
 
         #region .ctor
 
         /// <summary>
-        /// Create new instace with dfault TTL (Time to live)
+        /// Create new instace of <see cref="Manager"/>
         /// </summary>
-        /// <param name="options">Options</param>
+        /// <param name="options">Manager options</param>
         public Manager(ManagerOptions options)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _taskFactory = Task.Factory;
-            _clearTimer = new Timer(ClearTimerCallback, null, options.ClearPeriod, options.ClearPeriod);
-            _frequinceDecrementTimer = new Timer(FrequinceDecrementTimerCallback, null, options.FrequinceDecreasePeriod, options.FrequinceDecreasePeriod);
+            _cancellationTokenSource = new CancellationTokenSource();
+            _taskFactory = new TaskFactory(_cancellationTokenSource.Token, TaskCreationOptions.None, TaskContinuationOptions.PreferFairness, TaskScheduler.Current);
+            _clearTimer = new Timer(ClearTimerCallback, null, options.ClearExpiredValuesPeriod, options.ClearExpiredValuesPeriod);
+            _frequinceDecrementTimer = new Timer(FrequinceDecrementTimerCallback, null, options.DecreaseValueFrequincePeriod, options.DecreaseValueFrequincePeriod);
         }
 
         #endregion
@@ -194,7 +201,7 @@ namespace NetworkDictionary.Manager
         /// <summary>
         /// Callback for clear timer
         /// </summary>
-        /// <param name="state"></param>
+        /// <param name="state">State object (not used)</param>
         private void ClearTimerCallback(object state)
         {
             CreateSingleThreadTaskFromAction(() =>
@@ -209,9 +216,9 @@ namespace NetworkDictionary.Manager
         }
 
         /// <summary>
-        /// Callback for clear timer
+        /// Callback for frequince decrementation timer
         /// </summary>
-        /// <param name="state"></param>
+        /// <param name="state">State object (not used)</param>
         private void FrequinceDecrementTimerCallback(object state)
         {
             CreateSingleThreadTaskFromAction(() =>
@@ -225,31 +232,46 @@ namespace NetworkDictionary.Manager
 
         #region IDisposable
 
+        /// <summary>
+        /// Dispose from IDisposable.Dispose()
+        /// </summary>
         public void Dispose()
         {
             GC.SuppressFinalize(this);
             Dispose(true);
         }
 
-        protected virtual void Dispose(bool disposing)
+        /// <summary>
+        /// Dispose object
+        /// </summary>
+        /// <param name="disposing">Is called by IDisposable.Dispose()</param>
+        private void Dispose(bool disposing)
         {
             if (_disposed)
                 return;
             _disposed = true;
 
+            _cancellationTokenSource.Cancel();
+            _clearTimer.Dispose();
+            _frequinceDecrementTimer.Dispose();
+
             if (disposing)
             {
                 _dictionary.Clear();
             }
-            _clearTimer.Dispose();
-            _frequinceDecrementTimer.Dispose();
         }
 
+        /// <summary>
+        /// Destroy from GC
+        /// </summary>
         ~Manager()
         {
             Dispose(false);
         }
 
+        /// <summary>
+        /// Throw an exception <see cref="ObjectDisposedException"/> if this object has been already disposed
+        /// </summary>
         private void ThrowIfDisposed()
         {
             if (_disposed)

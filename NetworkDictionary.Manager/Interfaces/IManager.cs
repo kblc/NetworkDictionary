@@ -6,7 +6,7 @@ namespace NetworkDictionary.Manager.Interfaces
     /// <summary>
     /// Cache dictionary manager interface
     /// </summary>
-    public interface IManager
+    public interface IManager : IDisposable
     {
         /// <summary>
         /// Add value to dictionary

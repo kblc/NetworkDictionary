@@ -20,100 +20,114 @@ namespace NetworkDictionary.Manager.Tests
         public async void SetValueShouldNotRaiseException()
         {
             //Assign
-            var manager = ManagerFactory.CreateManager(_managerOptions);
-            var key = Guid.NewGuid().ToString("N");
+            const string key = "testKey";
 
             //Act
-            await manager.SetValue(key, "testValue", Timeout.InfiniteTimeSpan);
+            using (var manager = ManagerFactory.CreateManager(_managerOptions))
+            {
+                await manager.SetValue(key, "testValue", Timeout.InfiniteTimeSpan);
+            }
         }
 
         [Fact]
         public async void SetExistetKeyValueShouldNotRaiseException()
-        {   
+        {
             //Assign
-            var manager = ManagerFactory.CreateManager(_managerOptions);
-            var key = Guid.NewGuid().ToString("N");
+            const string key = "testKey";
 
             //Act
-            await manager.SetValue(key, "testValue");
-            await manager.SetValue(key, "testValue2");
+            using (var manager = ManagerFactory.CreateManager(_managerOptions))
+            {
+                await manager.SetValue(key, "testValue");
+                await manager.SetValue(key, "testValue2");
+            }
         }
 
         [Fact]
         public async void GetUnexistedValueShouldReturnNull()
         {
             //Assign
-            var manager = ManagerFactory.CreateManager(_managerOptions);
-            var key = Guid.NewGuid().ToString("N");
+            const string key = "testKey";
 
             //Act
-            var value = await manager.GetValue(key);
+            using (var manager = ManagerFactory.CreateManager(_managerOptions))
+            {
+                var value = await manager.GetValue(key);
 
-            //Assert
-            Assert.Null(value);
+                //Assert
+                Assert.Null(value);
+            }
         }
 
         [Fact]
         public async void GetExistedValueShouldReturnExpectedValue()
         {
             //Assign
-            var manager = ManagerFactory.CreateManager(_managerOptions);
-            var key = Guid.NewGuid().ToString("N");
             const string expectedValue = "testValue";
+            const string key = "testKey";
 
             //Act
-            await manager.SetValue(key, "testValue");
-            var value = await manager.GetValue(key);
+            using (var manager = ManagerFactory.CreateManager(_managerOptions))
+            {
+                await manager.SetValue(key, "testValue");
+                var value = await manager.GetValue(key);
 
-            //Assert
-            Assert.Equal(expectedValue, value);
+                //Assert
+                Assert.Equal(expectedValue, value);
+            }
         }
 
         [Fact]
         public async void DeleteExistedKeyValueShouldReturnTrue()
         {
             //Assign
-            var manager = ManagerFactory.CreateManager(_managerOptions);
-            var key = Guid.NewGuid().ToString("N");
+            const string key = "testKey";
             const bool expectedValue = true;
 
             //Act
-            await manager.SetValue(key, "testValue");
-            var value = await manager.DeleteValue(key);
+            using (var manager = ManagerFactory.CreateManager(_managerOptions))
+            {
+                await manager.SetValue(key, "testValue");
+                var value = await manager.DeleteValue(key);
 
-            //Assert
-            Assert.Equal(expectedValue, value);
+                //Assert
+                Assert.Equal(expectedValue, value);
+            }
         }
 
         [Fact]
         public async void DeleteUnexistedKeyValueShouldReturnFalse()
         {
             //Assign
-            var manager = ManagerFactory.CreateManager(_managerOptions);
-            var key = Guid.NewGuid().ToString("N");
+            const string key = "testKey";
             const bool expectedValue = false;
 
             //Act
-            var value = await manager.DeleteValue(key);
+            using (var manager = ManagerFactory.CreateManager(_managerOptions))
+            {
+                var value = await manager.DeleteValue(key);
 
-            //Assert
-            Assert.Equal(expectedValue, value);
+                //Assert
+                Assert.Equal(expectedValue, value);
+            }
         }
 
         [Fact]
         public async void GetKeysShouldReturnExpectedValue()
         {
             //Assign
-            var manager = ManagerFactory.CreateManager(_managerOptions);
             var expectedValue = new [] { "expectedKey1", "expectedKey2" };
 
             //Act
-            await manager.SetValue("expectedKey1", "testValue");
-            await manager.SetValue("expectedKey2", "testValue");
-            var value = await manager.GetKeys();
+            using (var manager = ManagerFactory.CreateManager(_managerOptions))
+            {
+                await manager.SetValue("expectedKey1", "testValue");
+                await manager.SetValue("expectedKey2", "testValue");
+                var value = await manager.GetKeys();
 
-            //Assert
-            Assert.Equal(expectedValue, value);
+                //Assert
+                Assert.Equal(expectedValue, value);
+            }
         }
     }
 }

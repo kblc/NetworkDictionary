@@ -11,7 +11,7 @@ namespace NetworkDictionary.Manager
         /// Create new manager
         /// </summary>
         /// <param name="options">Manager options</param>
-        /// <returns></returns>
+        /// <returns>New manager instance</returns>
         public static IManager CreateManager(ManagerOptions options)
         {
             return new Manager(options);

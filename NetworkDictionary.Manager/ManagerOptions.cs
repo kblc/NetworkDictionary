@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetworkDictionary.Manager
 {
@@ -18,20 +19,20 @@ namespace NetworkDictionary.Manager
         /// <summary>
         /// Create new instance
         /// </summary>
-        /// <param name="clearPeriod">Period to clear data with expired period</param>
-        /// <param name="frequinceDecreasePeriod">Period to clear data with expired period</param>
+        /// <param name="clearExpiredValuesPeriod">Period to clear data with expired period</param>
+        /// <param name="decreaseValueFrequincePeriod">Period to clear data with expired period</param>
         /// <param name="defaultTtl">Default TTL (Time to live) for key values</param>
         /// <param name="maxKeyCount">Max key count for dictionary</param>
-        public ManagerOptions(TimeSpan clearPeriod, TimeSpan frequinceDecreasePeriod, TimeSpan defaultTtl, int maxKeyCount)
+        public ManagerOptions(TimeSpan clearExpiredValuesPeriod, TimeSpan decreaseValueFrequincePeriod, TimeSpan defaultTtl, int maxKeyCount)
         {
-            if (clearPeriod < _minClearPeriod)
-                throw new ArgumentOutOfRangeException(nameof(clearPeriod), $"Value should be more or equals to {_minClearPeriod}");
+            if (clearExpiredValuesPeriod < _minClearPeriod)
+                throw new ArgumentOutOfRangeException(nameof(clearExpiredValuesPeriod), $"Value should be more or equals to {_minClearPeriod}");
 
-            if (frequinceDecreasePeriod < _minFrequinceDecreasePeriod)
-                throw new ArgumentOutOfRangeException(nameof(frequinceDecreasePeriod), $"Value should be more or equals to {_minFrequinceDecreasePeriod}");
+            if (decreaseValueFrequincePeriod < _minFrequinceDecreasePeriod)
+                throw new ArgumentOutOfRangeException(nameof(decreaseValueFrequincePeriod), $"Value should be more or equals to {_minFrequinceDecreasePeriod}");
 
-            ClearPeriod = clearPeriod;
-            FrequinceDecreasePeriod = frequinceDecreasePeriod;
+            ClearExpiredValuesPeriod = clearExpiredValuesPeriod;
+            DecreaseValueFrequincePeriod = decreaseValueFrequincePeriod;
             DefaultTtl = defaultTtl;
             MaxKeyCount = maxKeyCount;
         }
@@ -39,11 +40,15 @@ namespace NetworkDictionary.Manager
         /// <summary>
         /// Default TTL (Time to live) for key values
         /// </summary>
+        [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public TimeSpan DefaultTtl { get; set; }
 
         /// <summary>
         /// Max key count for dictionary
         /// </summary>
+        [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         public int MaxKeyCount
         {
             get => _maxKeyCount;
@@ -58,11 +63,11 @@ namespace NetworkDictionary.Manager
         /// <summary>
         /// Period to clear data with expired period
         /// </summary>
-        public TimeSpan ClearPeriod { get; }
+        public TimeSpan ClearExpiredValuesPeriod { get; }
 
         /// <summary>
         /// Period to clear data with expired period
         /// </summary>
-        public TimeSpan FrequinceDecreasePeriod { get; }
+        public TimeSpan DecreaseValueFrequincePeriod { get; }
     }
 }
