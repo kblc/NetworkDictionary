@@ -8,16 +8,26 @@ namespace NetworkDictionary.Manager
     /// </summary>
     public class ManagerOptions
     {
+        #region Restrictions
+
         private static readonly TimeSpan _minClearPeriod = TimeSpan.FromSeconds(0.5);
         private static readonly TimeSpan _minFrequinceDecreasePeriod = TimeSpan.FromSeconds(0.5);
+
+        #endregion
+
+        #region Data
 
         /// <summary>
         /// Max key count for dictionary
         /// </summary>
         private int _maxKeyCount;
 
+        #endregion
+
+        #region .ctor
+
         /// <summary>
-        /// Create new instance
+        /// Create new instance of <see cref="ManagerOptions"/>
         /// </summary>
         /// <param name="clearExpiredValuesPeriod">Period to clear data with expired period</param>
         /// <param name="decreaseValueFrequincePeriod">Period to clear data with expired period</param>
@@ -36,6 +46,8 @@ namespace NetworkDictionary.Manager
             DefaultTtl = defaultTtl;
             MaxKeyCount = maxKeyCount;
         }
+
+        #endregion
 
         /// <summary>
         /// Default TTL (Time to live) for key values
