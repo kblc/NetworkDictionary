@@ -35,5 +35,10 @@ namespace NetworkDictionary.Manager.Interfaces
         /// </summary>
         /// <returns>Existed dictionary keys</returns>
         Task<string[]> GetKeys();
+
+        /// <summary>
+        /// Options
+        /// </summary>
+        ManagerOptions Options { get; }
     }
 }

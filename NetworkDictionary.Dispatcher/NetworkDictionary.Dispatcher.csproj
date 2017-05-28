@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NetworkDictionary.Domain\NetworkDictionary.Domain.csproj">
+      <Project>{66447012-180d-418a-8e4c-674a00c89bbc}</Project>
+      <Name>NetworkDictionary.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetworkDictionary.Manager\NetworkDictionary.Manager.csproj">
       <Project>{15061635-02a2-4418-a952-7ba88181355c}</Project>
       <Name>NetworkDictionary.Manager</Name>

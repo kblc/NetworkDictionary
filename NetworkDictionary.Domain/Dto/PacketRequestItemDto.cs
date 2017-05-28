@@ -14,13 +14,13 @@ namespace NetworkDictionary.Domain.Dto
         /// <summary>
         /// Get key requests
         /// </summary>
-        [DataMember(Name = "getKey")]
-        public GetKeysRequestDto[] GetKeyRequests { get; set; }
+        [DataMember(Name = "getValue")]
+        public GetValueRequestDto[] GetValueRequests { get; set; }
 
         /// <summary>
         /// Set key requests
         /// </summary>
-        [DataMember(Name = "setKey")]
+        [DataMember(Name = "setValue")]
         public SetValueRequestDto[] SetValueRequests { get; set; }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace NetworkDictionary.Domain.Dto
         /// <inheritdoc />
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var isNotAnyRequest = IsEmpty(GetKeyRequests)
+            var isNotAnyRequest = IsEmpty(GetValueRequests)
                                   && IsEmpty(SetValueRequests)
                                   && IsEmpty(GetKeysRequests)
                                   && IsEmpty(DeleteKeyRequests)

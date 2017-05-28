@@ -129,6 +129,9 @@ namespace NetworkDictionary.Manager
             return CreateSingleThreadTaskFromFunction(() => _dictionary.Keys.ToArray());
         }
 
+        /// <inheritdoc />
+        public ManagerOptions Options => _options;
+
         /// <summary>
         /// Set value and other parameters for dictionary value
         /// </summary>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace NetworkDictionary.Domain.Dto
@@ -20,5 +21,11 @@ namespace NetworkDictionary.Domain.Dto
         /// </summary>
         [DataMember(Name = "value"), MaxLength(1024*1024/2)]
         public string Value { get; set; }
+
+        /// <summary>
+        /// Time to live
+        /// </summary>
+        [DataMember(Name = "ttl")]
+        public TimeSpan? TimeToLive { get; set; }
     }
 }

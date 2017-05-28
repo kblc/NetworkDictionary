@@ -11,8 +11,8 @@ namespace NetworkDictionary.Domain.Dto
         /// <summary>
         /// Get key responses
         /// </summary>
-        [DataMember(Name = "getKey")]
-        public GetKeysResponseDto[] GetKeyResponses { get; set; }
+        [DataMember(Name = "getValue")]
+        public GetValueResponseDto[] GetValueResponses { get; set; }
 
         /// <summary>
         /// Get keys responses

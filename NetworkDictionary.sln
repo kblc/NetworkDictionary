@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkDictionary.Dispatche
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkDictionary.Domain", "NetworkDictionary.Domain\NetworkDictionary.Domain.csproj", "{66447012-180D-418A-8E4C-674A00C89BBC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkDictionary.Dispatcher.Tests", "NetworkDictionary.Dispatcher.Tests\NetworkDictionary.Dispatcher.Tests.csproj", "{93D536B8-0165-4EF6-AC5F-B68A760B584A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{66447012-180D-418A-8E4C-674A00C89BBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66447012-180D-418A-8E4C-674A00C89BBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66447012-180D-418A-8E4C-674A00C89BBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93D536B8-0165-4EF6-AC5F-B68A760B584A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93D536B8-0165-4EF6-AC5F-B68A760B584A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93D536B8-0165-4EF6-AC5F-B68A760B584A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93D536B8-0165-4EF6-AC5F-B68A760B584A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
