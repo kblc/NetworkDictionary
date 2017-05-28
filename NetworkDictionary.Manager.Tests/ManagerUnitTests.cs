@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using Xunit;
 
@@ -7,11 +8,11 @@ namespace NetworkDictionary.Manager.Tests
     /// <summary>
     /// Unit tests for <see cref="Manager"/>
     /// </summary>
-    public class ManagerTests
+    public class ManagerUnitTests
     {
         private readonly ManagerOptions _managerOptions;
 
-        public ManagerTests()
+        public ManagerUnitTests()
         {
             _managerOptions = new ManagerOptions(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10), Timeout.InfiniteTimeSpan, 100);
         }
@@ -127,6 +128,31 @@ namespace NetworkDictionary.Manager.Tests
 
                 //Assert
                 Assert.Equal(expectedValue, value);
+            }
+        }
+
+        [Fact]
+        public async void SetKeyFor101ItemShouldDeleteOneKeyFromBegining()
+        {
+            //Assign
+            var items = Enumerable.Range(0, 101)
+                .Select(i => new {Key = $"key{i:0000}", Value = $"value{i:0000}"})
+                .ToArray();
+
+            var expectedKeys = items.Skip(1).Select(i => i.Key).ToArray();
+
+            //Act
+            using (var manager = ManagerFactory.CreateManager(_managerOptions))
+            {
+                foreach (var item in items)
+                {
+                    await manager.SetValue(item.Key, item.Value);
+                }
+                var value = await manager.GetKeys();
+
+                //Assert
+                Assert.Equal(expectedKeys.Length, value.Length);
+                Assert.True(value.All(v => expectedKeys.Contains(v)));
             }
         }
     }
