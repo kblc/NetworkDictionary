@@ -42,9 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\ManagerException.cs" />
     <Compile Include="Extensions\DictionaryValueExtensions.cs" />
     <Compile Include="Interfaces\IManager.cs" />
     <Compile Include="Manager.cs" />
+    <Compile Include="ManagerFactory.cs" />
+    <Compile Include="ManagerOptions.cs" />
     <Compile Include="Models\DictionaryValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

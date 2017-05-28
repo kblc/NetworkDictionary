@@ -13,7 +13,7 @@ namespace NetworkDictionary.Manager
     /// <summary>
     /// Cache dictionary manager
     /// </summary>
-    public class Manager : IManager, IDisposable
+    internal class Manager : IManager, IDisposable
     {
         #region Data
 
@@ -38,6 +38,11 @@ namespace NetworkDictionary.Manager
         private readonly Timer _clearTimer;
 
         /// <summary>
+        /// Frequince decrement timer
+        /// </summary>
+        private readonly Timer _frequinceDecrementTimer;
+
+        /// <summary>
         /// Object already disposed
         /// </summary>
         private bool _disposed;
@@ -46,7 +51,6 @@ namespace NetworkDictionary.Manager
         /// Options
         /// </summary>
         private readonly ManagerOptions _options;
-
 
         #endregion
 
@@ -60,7 +64,8 @@ namespace NetworkDictionary.Manager
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _taskFactory = Task.Factory;
-            _clearTimer = new Timer(ClearTimerCallback, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+            _clearTimer = new Timer(ClearTimerCallback, null, options.ClearPeriod, options.ClearPeriod);
+            _frequinceDecrementTimer = new Timer(FrequinceDecrementTimerCallback, null, options.FrequinceDecreasePeriod, options.FrequinceDecreasePeriod);
         }
 
         #endregion
@@ -88,7 +93,7 @@ namespace NetworkDictionary.Manager
         {
             return CreateSingleThreadTaskFromFunction(() =>
             {
-                if (!_dictionary.TryGetValue(key, out DictionaryValue existedItem))
+                if (!_dictionary.TryGetValue(key, out DictionaryValue existedItem) || existedItem.Expired < DateTime.UtcNow)
                     return null;
 
                 existedItem.IncrementRequestCount();
@@ -125,7 +130,7 @@ namespace NetworkDictionary.Manager
         private static DictionaryValue SetDictionaryItemValue(DictionaryValue item, string value, TimeSpan tll)
         {
             item.Value = value;
-            item.Expired = DateTime.UtcNow + tll;
+            item.Expired = tll == Timeout.InfiniteTimeSpan ? DateTime.MaxValue : DateTime.UtcNow + tll;
             item.IncrementRequestCount();
             return item;
         }
@@ -203,6 +208,21 @@ namespace NetworkDictionary.Manager
             });
         }
 
+        /// <summary>
+        /// Callback for clear timer
+        /// </summary>
+        /// <param name="state"></param>
+        private void FrequinceDecrementTimerCallback(object state)
+        {
+            CreateSingleThreadTaskFromAction(() =>
+            {
+                foreach (var dictionaryValue in _dictionary.Values)
+                {
+                    dictionaryValue.DecrementRequestCount();
+                }
+            });
+        }
+
         #region IDisposable
 
         public void Dispose()
@@ -222,6 +242,7 @@ namespace NetworkDictionary.Manager
                 _dictionary.Clear();
             }
             _clearTimer.Dispose();
+            _frequinceDecrementTimer.Dispose();
         }
 
         ~Manager()

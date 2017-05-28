@@ -23,5 +23,23 @@ namespace NetworkDictionary.Manager.Extensions
 
             dictionaryValue.RequestCount++;
         }
+
+        /// <summary>
+        /// Decrement request count
+        /// </summary>
+        /// <param name="dictionaryValue">Dictionary value</param>
+        public static void DecrementRequestCount(this DictionaryValue dictionaryValue)
+        {
+            if (dictionaryValue == null)
+            {
+                throw new ArgumentNullException(nameof(dictionaryValue));
+            }
+            if (dictionaryValue.RequestCount == 0)
+                return;
+
+            dictionaryValue.RequestCount--;
+        }
     }
+
+
 }

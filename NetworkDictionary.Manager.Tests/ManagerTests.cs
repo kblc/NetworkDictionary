@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using NetworkDictionary.Manager.Interfaces;
 using Xunit;
 
 namespace NetworkDictionary.Manager.Tests
@@ -8,41 +7,47 @@ namespace NetworkDictionary.Manager.Tests
     /// <summary>
     /// Unit tests for <see cref="Manager"/>
     /// </summary>
-    public class ManagerTests : IClassFixture<ManagerTestFixture>
+    public class ManagerTests
     {
-        private readonly IManager _manager;
+        private readonly ManagerOptions _managerOptions;
 
-        public ManagerTests(ManagerTestFixture fixture) { _manager = fixture.Manager; }
+        public ManagerTests()
+        {
+            _managerOptions = new ManagerOptions(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10), Timeout.InfiniteTimeSpan, 100);
+        }
 
         [Fact]
         public async void SetValueShouldNotRaiseException()
         {
             //Assign
+            var manager = ManagerFactory.CreateManager(_managerOptions);
             var key = Guid.NewGuid().ToString("N");
 
             //Act
-            await _manager.SetValue(key, "testValue", Timeout.InfiniteTimeSpan);
+            await manager.SetValue(key, "testValue", Timeout.InfiniteTimeSpan);
         }
 
         [Fact]
         public async void SetExistetKeyValueShouldNotRaiseException()
         {   
             //Assign
+            var manager = ManagerFactory.CreateManager(_managerOptions);
             var key = Guid.NewGuid().ToString("N");
 
             //Act
-            await _manager.SetValue(key, "testValue");
-            await _manager.SetValue(key, "testValue2");
+            await manager.SetValue(key, "testValue");
+            await manager.SetValue(key, "testValue2");
         }
 
         [Fact]
         public async void GetUnexistedValueShouldReturnNull()
         {
             //Assign
+            var manager = ManagerFactory.CreateManager(_managerOptions);
             var key = Guid.NewGuid().ToString("N");
 
             //Act
-            var value = await _manager.GetValue(key);
+            var value = await manager.GetValue(key);
 
             //Assert
             Assert.Null(value);
@@ -52,12 +57,13 @@ namespace NetworkDictionary.Manager.Tests
         public async void GetExistedValueShouldReturnExpectedValue()
         {
             //Assign
+            var manager = ManagerFactory.CreateManager(_managerOptions);
             var key = Guid.NewGuid().ToString("N");
             const string expectedValue = "testValue";
 
             //Act
-            await _manager.SetValue(key, "testValue");
-            var value = await _manager.GetValue(key);
+            await manager.SetValue(key, "testValue");
+            var value = await manager.GetValue(key);
 
             //Assert
             Assert.Equal(expectedValue, value);
@@ -67,12 +73,13 @@ namespace NetworkDictionary.Manager.Tests
         public async void DeleteExistedKeyValueShouldReturnTrue()
         {
             //Assign
+            var manager = ManagerFactory.CreateManager(_managerOptions);
             var key = Guid.NewGuid().ToString("N");
             const bool expectedValue = true;
 
             //Act
-            await _manager.SetValue(key, "testValue");
-            bool value = await _manager.DeleteValue(key);
+            await manager.SetValue(key, "testValue");
+            var value = await manager.DeleteValue(key);
 
             //Assert
             Assert.Equal(expectedValue, value);
@@ -82,11 +89,12 @@ namespace NetworkDictionary.Manager.Tests
         public async void DeleteUnexistedKeyValueShouldReturnFalse()
         {
             //Assign
+            var manager = ManagerFactory.CreateManager(_managerOptions);
             var key = Guid.NewGuid().ToString("N");
             const bool expectedValue = false;
 
             //Act
-            var value = await _manager.DeleteValue(key);
+            var value = await manager.DeleteValue(key);
 
             //Assert
             Assert.Equal(expectedValue, value);
@@ -96,38 +104,16 @@ namespace NetworkDictionary.Manager.Tests
         public async void GetKeysShouldReturnExpectedValue()
         {
             //Assign
+            var manager = ManagerFactory.CreateManager(_managerOptions);
             var expectedValue = new [] { "expectedKey1", "expectedKey2" };
 
             //Act
-            await _manager.SetValue("expectedKey1", "testValue");
-            await _manager.SetValue("expectedKey2", "testValue");
-            var value = await _manager.GetKeys();
+            await manager.SetValue("expectedKey1", "testValue");
+            await manager.SetValue("expectedKey2", "testValue");
+            var value = await manager.GetKeys();
 
             //Assert
             Assert.Equal(expectedValue, value);
-        }
-    }
-
-    /// <summary>
-    /// Initialize fixture for every test in <see cref="ManagerTests"/>
-    /// </summary>
-    public class ManagerTestFixture
-    {
-        /// <summary>
-        /// Manager
-        /// </summary>
-        public IManager Manager { get; }
-
-        /// <summary>
-        /// Create instance
-        /// </summary>
-        public ManagerTestFixture()
-        {
-            Manager = new Manager(new ManagerOptions
-            {
-                MaxKeyCount = 100000,
-                DefaultTtl = Timeout.InfiniteTimeSpan
-            });
         }
     }
 }
