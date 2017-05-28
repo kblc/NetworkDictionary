@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{15061635-02A2-4418-A952-7BA88181355C}</ProjectGuid>
+    <ProjectGuid>{6ACA6DAA-C967-4BAE-920F-102798594FD1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetworkDictionary.Manager</RootNamespace>
-    <AssemblyName>NetworkDictionary.Manager</AssemblyName>
+    <RootNamespace>NetworkDictionary.Dispatcher</RootNamespace>
+    <AssemblyName>NetworkDictionary.Dispatcher</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,7 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,15 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\ManagerException.cs" />
-    <Compile Include="Extensions\DictionaryValueExtensions.cs" />
-    <Compile Include="Interfaces\IManager.cs" />
-    <Compile Include="Manager.cs" />
-    <Compile Include="ManagerFactory.cs" />
-    <Compile Include="ManagerOptions.cs" />
-    <Compile Include="Models\DictionaryValue.cs" />
+    <Compile Include="Dispatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\NetworkDictionary.Manager\NetworkDictionary.Manager.csproj">
+      <Project>{15061635-02a2-4418-a952-7ba88181355c}</Project>
+      <Name>NetworkDictionary.Manager</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

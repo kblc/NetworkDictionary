@@ -80,19 +80,21 @@ namespace NetworkDictionary.Manager
         /// <inheritdoc />
         public Task SetValue(string key, string value, TimeSpan? ttl = null)
         {
-            return CreateSingleThreadTaskFromAction(() =>
-            {
-                if (_dictionary.TryGetValue(key, out DictionaryValue existedItem))
-                {
-                    SetDictionaryItemValue(existedItem, value, ttl ?? _options.DefaultTtl);
-                }
-                else
-                {
-                    var newValue = SetDictionaryItemValue(new DictionaryValue(), value, ttl ?? _options.DefaultTtl);
-                    AllocateKeyForNewOne(_options.MaxKeyCount);
-                    _dictionary.Add(key, newValue);
-                }
-            });
+            return value == null
+                ? DeleteValue(key)
+                : CreateSingleThreadTaskFromAction(() =>
+                    {
+                        if (_dictionary.TryGetValue(key, out DictionaryValue existedItem))
+                        {
+                            SetDictionaryItemValue(existedItem, value, ttl ?? _options.DefaultTtl);
+                        }
+                        else
+                        {
+                            var newValue = SetDictionaryItemValue(new DictionaryValue(), value, ttl ?? _options.DefaultTtl);
+                            AllocateKeyForNewOne(_options.MaxKeyCount);
+                            _dictionary.Add(key, newValue);
+                        }
+                    });
         }
 
         /// <inheritdoc />
