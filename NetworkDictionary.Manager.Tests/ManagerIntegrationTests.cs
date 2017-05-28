@@ -58,10 +58,10 @@ namespace NetworkDictionary.Manager.Tests
             //Act
             using (var manager = ManagerFactory.CreateManager(_managerOptions))
             {
-                var tasks = items.Select(item => manager.SetValue(item.Key, item.Value))
-                    .Concat(new[] { Task.Delay(TimeSpan.FromSeconds(6)) })
-                    .ToArray();
+                var tasks = items.Select(item => manager.SetValue(item.Key, item.Value)).ToArray();
+
                 await Task.WhenAll(tasks);
+                await Task.Delay(TimeSpan.FromSeconds(6));
 
                 var value = await manager.GetKeys();
 

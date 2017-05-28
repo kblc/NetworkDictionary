@@ -70,7 +70,7 @@ namespace NetworkDictionary.Manager
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _taskFactory = Task.Factory;
             _cancellationTokenSource = new CancellationTokenSource();
-            _taskFactory = new TaskFactory(_cancellationTokenSource.Token, TaskCreationOptions.None, TaskContinuationOptions.PreferFairness, TaskScheduler.Current);
+            _taskFactory = new TaskFactory(_cancellationTokenSource.Token, TaskCreationOptions.None, TaskContinuationOptions.PreferFairness, TaskScheduler.Default);
             _clearTimer = new Timer(ClearTimerCallback, null, options.ClearExpiredValuesPeriod, options.ClearExpiredValuesPeriod);
             _frequinceDecrementTimer = new Timer(FrequinceDecrementTimerCallback, null, options.DecreaseValueFrequincePeriod, options.DecreaseValueFrequincePeriod);
         }
