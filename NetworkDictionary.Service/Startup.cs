@@ -36,7 +36,7 @@ namespace NetworkDictionary.Service
 
             services.AddSingleton<IManager>(sp =>
             {
-                var config = (IOptionsSnapshot<ManagerConfiguration>)sp.GetService(typeof(IOptionsSnapshot<ManagerConfiguration>));
+                var config = (IOptions<ManagerConfiguration>)sp.GetService(typeof(IOptions<ManagerConfiguration>));
                 var options = new ManagerOptions(config.Value.ClearExpiredValuesPeriod, config.Value.DecreaseValueFrequincePeriod, config.Value.DefaultTtl, config.Value.MaxKeyCount);
                 return ManagerFactory.CreateManager(options);
             });
@@ -45,9 +45,6 @@ namespace NetworkDictionary.Service
                 var manager = (IManager)sp.GetService(typeof(IManager));
                 return new Dispatcher.Dispatcher(manager, true);
             });
-
-            // Add framework services.
-            services.AddMvc();
 
             // Add swagger service
             services.AddSwaggerGen(c =>
@@ -72,6 +69,9 @@ namespace NetworkDictionary.Service
 
                 c.IncludeXmlComments(xmlPath);
             });
+
+            // Add framework services.
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,11 +80,8 @@ namespace NetworkDictionary.Service
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            if (!env.IsProduction())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Network dictionaty API v1"); });
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Network dictionaty API v1"); });
 
             app.UseMvc();
         }

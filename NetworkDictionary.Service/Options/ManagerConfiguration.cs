@@ -1,10 +1,9 @@
 ﻿using System;
-using NetworkDictionary.Manager.Interfaces;
 
 namespace NetworkDictionary.Service.Options
 {
     /// <summary>
-    /// Stored configuration for <see cref="IManager"/>
+    /// Stored configuration for <see cref="Manager.Interfaces.IManager"/>
     /// </summary>
     public class ManagerConfiguration
     {
@@ -21,11 +20,11 @@ namespace NetworkDictionary.Service.Options
         /// <summary>
         /// Period to clear data with expired period
         /// </summary>
-        public TimeSpan ClearExpiredValuesPeriod { get; }
+        public TimeSpan ClearExpiredValuesPeriod { get; set; }
 
         /// <summary>
         /// Period to clear data with expired period
         /// </summary>
-        public TimeSpan DecreaseValueFrequincePeriod { get; }
+        public TimeSpan DecreaseValueFrequincePeriod { get; set; }
     }
 }
