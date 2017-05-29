@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using NetworkDictionary.Domain.Dto;
 using NetworkDictionary.Manager;
