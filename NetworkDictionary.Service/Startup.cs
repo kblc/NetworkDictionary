@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
+using NetworkDictionary.Dispatcher.Interfaces;
+using NetworkDictionary.Manager;
+using NetworkDictionary.Manager.Interfaces;
 using NetworkDictionary.Service.Options;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -40,7 +43,7 @@ namespace NetworkDictionary.Service
 
             services.AddTransient<IDispatcher>(sp => {
                 var manager = (IManager)sp.GetService(typeof(IManager));
-                return new Dispatcher(manager, true);
+                return new Dispatcher.Dispatcher(manager, true);
             });
 
             // Add framework services.

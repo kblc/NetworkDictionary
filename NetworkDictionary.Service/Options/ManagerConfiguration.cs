@@ -1,4 +1,5 @@
 ﻿using System;
+using NetworkDictionary.Manager.Interfaces;
 
 namespace NetworkDictionary.Service.Options
 {
