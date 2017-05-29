@@ -33,8 +33,9 @@ namespace NetworkDictionary.Manager.Interfaces
         /// <summary>
         /// Get all dictionary keys
         /// </summary>
+        /// <param name="filterFunction">Function to filter keys</param>
         /// <returns>Existed dictionary keys</returns>
-        Task<string[]> GetKeys();
+        Task<string[]> GetKeys(Func<string,bool> filterFunction = null);
 
         /// <summary>
         /// Options

@@ -124,9 +124,15 @@ namespace NetworkDictionary.Manager
         }
 
         /// <inheritdoc />
-        public Task<string[]> GetKeys()
+        public Task<string[]> GetKeys(Func<string, bool> filterFunction = null)
         {
-            return CreateSingleThreadTaskFromFunction(() => _dictionary.Keys.ToArray());
+            return CreateSingleThreadTaskFromFunction(() =>
+            {
+                var result = _dictionary.Keys.AsEnumerable();
+                if (filterFunction != null)
+                    result = result.Where(filterFunction);
+                return result.ToArray();
+            });
         }
 
         /// <inheritdoc />
